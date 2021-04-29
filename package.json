@@ -1,0 +1,23 @@
+{
+  "name": "scrappy",
+  "version": "0.1.0",
+  "description": "web scrap and convert to small content",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Auxnon/Scrappy.git"
+  },
+  "keywords": [
+    "web",
+    "scraper"
+  ],
+  "author": "makeavoy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Auxnon/Scrappy/issues"
+  },
+  "homepage": "https://github.com/Auxnon/Scrappy#readme"
+}
