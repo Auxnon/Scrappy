@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <img src="out1.jpg" alt="" style="image-rendering: pixelated; width:512px; height: 448px">
+    <img src="out2.jpg" alt="" style="image-rendering: pixelated; width:512px; height: 448px">
+    <img src="out3.jpg" alt="" style="image-rendering: pixelated; width:512px; height: 448px">
+</body>
+<script src="three.min.js">
+</script>
+<script>
+let g = new THREE.Group();
+let init
+
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+cubes=[];
+camera.position.z=5
+
+makeCube("out1.jpg",{x:0,y:0,z:0})
+makeCube("out2.jpg",{x:-1,y:-1,z:0})
+makeCube("out3.jpg",{x:1,y:-1,z:0})
+
+makeCube("git1.jpg",{x:0,y:2,z:0})
+makeCube("git2.jpg",{x:-1,y:1,z:0})
+makeCube("git3.jpg",{x:1,y:1,z:0})
+
+render();
+//});
+
+function makeCube(img,pos) {
+    var geometry = new THREE.BoxGeometry(1, 1, 1);
+    var cube
+    //let imageElement= document.querySelector('img')
+    //window.addEventListener('load',function(e) {
+    const texture = new THREE.TextureLoader().load(img);
+    //let texture = new THREE.Texture( imageElement );
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.NearestFilter;
+    texture.needsUpdate = true;
+
+    var material = new THREE.MeshBasicMaterial({ map: texture });
+    cube = new THREE.Mesh(geometry, material);
+    cube.position.set(pos.x,pos.y,pos.z)
+    scene.add(cube);
+    cubes.push(cube)
+    cube.position.set(pos.x,pos.y,pos.z)
+    
+}
+
+
+//
+
+
+
+function render() {
+	cubes.forEach(cube=>{
+		cube.rotation.y += 0.02
+	})
+    requestAnimationFrame(render);
+    renderer.render(scene, camera);
+}
+</script>
+
+</html>

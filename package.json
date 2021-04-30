@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/Auxnon/Scrappy/issues"
   },
-  "homepage": "https://github.com/Auxnon/Scrappy#readme"
+  "homepage": "https://github.com/Auxnon/Scrappy#readme",
+  "dependencies": {
+    "puppeteer": "^9.0.0",
+    "resize-image-buffer": "^1.0.0"
+  }
 }
