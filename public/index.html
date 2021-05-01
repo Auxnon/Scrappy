@@ -15,6 +15,8 @@
 <script src="three.min.js">
 </script>
 <script>
+let iterator = 0
+let time = 0
 let g = new THREE.Group();
 let init
 
@@ -23,39 +25,78 @@ var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHei
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x7DCEE3,1)
 document.body.appendChild(renderer.domElement);
-cubes=[];
-camera.position.z=5
+cubes = [];
+camera.position.set(0, 3, -5)
+camera.rotation.y = Math.PI
+camera.rotation.x = 0.5
+let group = new THREE.Group();
 
-makeCube("out1.jpg",{x:0,y:0,z:0})
-makeCube("out2.jpg",{x:-1,y:-1,z:0})
-makeCube("out3.jpg",{x:1,y:-1,z:0})
+var geometry = new THREE.BoxGeometry(1, 1, 1);
+geometry.rotateX(Math.PI/2)
 
-makeCube("git1.jpg",{x:0,y:2,z:0})
-makeCube("git2.jpg",{x:-1,y:1,z:0})
-makeCube("git3.jpg",{x:1,y:1,z:0})
+textureHash = {}
+
+/*
+makeCube("out1.jpg", { x: 0, y: 0, z: 0 })
+makeCube("out2.jpg", { x: -1, y: -1, z: 0 })
+makeCube("out3.jpg", { x: 1, y: -1, z: 0 })
+
+makeCube("git1.jpg", { x: 0, y: 2, z: 0 })
+makeCube("git2.jpg", { x: -1, y: 1, z: 0 })
+makeCube("git3.jpg", { x: 1, y: 1, z: 0 })
+*/
+let sites = [
+    "butthole.com",
+    "example.com",
+    "google.com",
+
+    "facebook.com",
+    "wikipedia.com",
+    "pornhub.com",
+
+    "github.com",
+    "microsoft.com",
+    "apple.com",
+    "americanstandard.com",
+];
+
+for (let i = 0; i < 64; i++) {
+    for (let j = 0; j < 64; j++) {
+        let alt = (j + (i % 2 == 0 ? 1 : 0)) % 2 == 0
+        let index = (i + j) % sites.length
+        makeCube(sites[index], { x: i - 32, y: 1, z: j })
+    }
+}
+scene.add(group)
 
 render();
 //});
 
-function makeCube(img,pos) {
-    var geometry = new THREE.BoxGeometry(1, 1, 1);
-    var cube
+
+function makeCube(img, pos) {
+    img = './dump/' + img + '2.jpg'
     //let imageElement= document.querySelector('img')
     //window.addEventListener('load',function(e) {
-    const texture = new THREE.TextureLoader().load(img);
+    let hashOut = textureHash[img]
+    let texture
+    if (!hashOut) {
+        texture = new THREE.TextureLoader().load(img);
+        texture.minFilter = THREE.NearestFilter;
+        texture.magFilter = THREE.NearestFilter;
+        //texture.needsUpdate = true;
+        textureHash[img] = texture
+    } else
+        texture = hashOut;
     //let texture = new THREE.Texture( imageElement );
-    texture.minFilter = THREE.NearestFilter;
-    texture.magFilter = THREE.NearestFilter;
-    texture.needsUpdate = true;
 
     var material = new THREE.MeshBasicMaterial({ map: texture });
-    cube = new THREE.Mesh(geometry, material);
-    cube.position.set(pos.x,pos.y,pos.z)
-    scene.add(cube);
+    let cube = new THREE.Mesh(geometry, material);
+    cube.position.set(pos.x, pos.y, pos.z)
+    group.add(cube);
     cubes.push(cube)
-    cube.position.set(pos.x,pos.y,pos.z)
-    
+
 }
 
 
@@ -63,10 +104,24 @@ function makeCube(img,pos) {
 
 
 
+
 function render() {
-	cubes.forEach(cube=>{
-		cube.rotation.y += 0.02
-	})
+    //cubes.forEach(cube => {
+    //group.rotation.y += 0.02
+    // })
+    for (let i = 0; i < cubes.length; i++) {
+        let target = cubes[i]
+        target.position.y = Math.cos(time + target.position.x / 8.0)+Math.sin(time + target.position.z / 4.0)
+        iterator++
+        if (iterator >= cubes.length)
+            iterator = 0
+    }
+    time += 0.01
+    if (time >= Math.PI*2)
+        time -= Math.PI*2
+
+
+    camera.position.z =10///+= 0.02
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
